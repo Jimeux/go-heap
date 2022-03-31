@@ -83,8 +83,9 @@ func getRankingOptimized(k int, filename string) []Record {
 	}
 	defer file.Close()
 
-	// store all read records in memory
 	scanner := bufio.NewScanner(file)
+	// use a min heap of size k+1 because we push elements one-by-one,
+	// and Pop (remove the smallest one) each time.
 	minHeap := make(Heap, 0, k+1)
 
 	for scanner.Scan() {
@@ -92,19 +93,22 @@ func getRankingOptimized(k int, filename string) []Record {
 		line := scanner.Text()
 		split := strings.Split(line, ",")
 		idStr, scoreStr := split[0], split[1]
-		// add record to slice
 		id, _ := strconv.Atoi(idStr)
 		score, _ := strconv.Atoi(scoreStr)
 
+		// push all records to the heap
 		heap.Push(&minHeap, Record{id, score})
-		if minHeap.Len() > k { // k+1
+		if minHeap.Len() > k {
+			// when Len reaches k+1, then call Pop (this removes the smallest element)
 			heap.Pop(&minHeap)
+			// now only the top k elements seen so far remain in the heap
 		}
 	}
 	if err := scanner.Err(); err != nil {
 		log.Fatalf("error reading file: %s", err)
 	}
 
+	// heap order is not guaranteed, so sort
 	sort.Slice(minHeap, func(i, j int) bool {
 		return minHeap[i].Score > minHeap[j].Score
 	})
