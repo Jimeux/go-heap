@@ -96,7 +96,6 @@ func getRankingOptimized(k int, filename string) []Record {
 		id, _ := strconv.Atoi(idStr)
 		score, _ := strconv.Atoi(scoreStr)
 
-		// k=5
 		heap.Push(&minHeap, Record{id, score})
 		if minHeap.Len() > k { // k+1
 			heap.Pop(&minHeap)
@@ -116,24 +115,6 @@ func getRankingOptimized(k int, filename string) []Record {
 	}
 	return minHeap[:k]
 }
-
-/*		MIN HEAP
-        ✅ parent < child
-
-		parent = (child - 1) / 2
-		left   = parent * 2 + 1
-		right  = parent * 2 + 2
-
-		0  1  2  3  4
-       [1, 2, 3, 5, 4]
-
-            1
-           / \
-          2   3       // complete tree = insert from left to right on each level
-         / \
-        5   4        // up
-                     // down
-*/
 
 type Heap []Record
 

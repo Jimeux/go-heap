@@ -1,15 +1,22 @@
 # go-heap
 
-
+Functions to get the top K scores from a file.
 
 ```
-go test . -run=. -bench=. -benchtime=5s -count 2 -benchmem
-go test . -run=. -bench=. -benchtime=5s -count 2 -benchmem -cpuprofile=cpu.out -memprofile=mem.out -trace=trace.out
+   MIN HEAP
+   ✅ parent < child
 
-go tool pprof -http :8080 cpu.out
-go tool pprof -http :8081 mem.out
-go tool trace trace.out
+   parent = (child - 1) / 2
+   left   = parent * 2 + 1
+   right  = parent * 2 + 2
 
-go tool pprof $FILENAME.test cpu.out
-# (pprof) list <func name>
+   0  1  2  3  4
+   [1, 2, 3, 5, 4]
+
+       1
+      / \
+     2   3       // complete tree = insert from left to right on each level
+    / \
+   5   4        // up
+                // down
 ```
